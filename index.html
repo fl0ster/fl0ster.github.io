@@ -88,7 +88,8 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            font-size: 1.5rem;
+            /* Fluid size so the title always fits on one line, even on narrow phones */
+            font-size: clamp(0.65rem, 4vw, 1.0rem);
             margin: 1rem 0 1.5rem 0;
             margin-right: calc(50% - 50vw); /* Bleed bar to the right viewport edge */
             padding: 0.6rem 1rem;
@@ -97,6 +98,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             border-bottom-left-radius: 16px;
+            white-space: nowrap; /* Never wrap to a second line */
         }
 
         h3 {
