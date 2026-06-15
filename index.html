@@ -30,13 +30,23 @@
             font-family: var(--font-mono);
             color: var(--color-primary);
             background-color: var(--color-secondary);
-            background-image: url('birds.png');
+            line-height: 1.5;
+        }
+
+        /* Fixed background image overlay. Its opacity fades from 1 to 0.5 as the
+           page scrolls to the bottom (driven by --bg-opacity from JS). */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-color: var(--color-secondary);
+            background-image: url('birds.jpeg');
             background-repeat: no-repeat;
             background-position: center center;
-            background-size:     cover;   
-            background-attachment: fixed;
+            background-size: cover;
             background-blend-mode: multiply;
-            line-height: 1.5;
+            opacity: var(--bg-opacity, 1);
         }
 
         a {
@@ -79,7 +89,7 @@
             top: 0;
             z-index: 10;
             font-size: 1.5rem;
-            margin: 2rem 0 1rem 0;
+            margin: 1rem 0 1.5rem 0;
             margin-right: calc(50% - 50vw); /* Bleed bar to the right viewport edge */
             padding: 0.6rem 1rem;
             background-color: var(--color-primary);
@@ -182,7 +192,7 @@
         
         /* CONTENT SECTIONS */
         .project-section, .talks-section {
-            margin-bottom: 3rem;
+            margin-bottom: 1rem;
         }
 
         .project-item {
@@ -247,6 +257,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             padding: 0.3rem 0.6rem;
+            margin-top: 0.5rem;
             border: var(--border-width) solid var(--color-primary);
         }
 
@@ -545,6 +556,7 @@
             }
             var span = document.createElement('span');
             span.textContent = ch;
+            span._orig = ch;    // remember the real glyph so we can restore on scroll up
             var key = Math.floor(row / BLOCK) + ',' + Math.floor(col / BLOCK);
             (blocks[key] || (blocks[key] = [])).push(span);
             frag.appendChild(span);
@@ -563,6 +575,54 @@
                 }
             }, Math.random() * DURATION);
         });
+
+        // SCROLL SCRAMBLE: as the page scrolls down, each 5x5 block gets its glyphs
+        // replaced with random ASCII characters — progressively scrambling the face.
+        var SCRAMBLE_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/░▒▓█/\\~ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        // Give every block a random scroll threshold so they scramble in random order.
+        var blockList = Object.keys(blocks).map(function (key) {
+            return { spans: blocks[key], threshold: Math.random(), scrambled: false };
+        });
+
+        function randChar() {
+            return SCRAMBLE_CHARS.charAt(Math.floor(Math.random() * SCRAMBLE_CHARS.length));
+        }
+
+        function onScroll() {
+            var max = document.documentElement.scrollHeight - window.innerHeight;
+            // Fully scrambled after scrolling through ~one viewport height (or the page max).
+            var span = Math.min(max, window.innerHeight);
+            var progress = span > 0 ? Math.min(1, window.scrollY / span) : 0;
+
+            // Fade the background image to 30%, but only over the last stretch of the
+            // page scroll (the final 15% before the very bottom).
+            var bottomProgress = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+            var FADE_START = 0.85;
+            var fade = bottomProgress <= FADE_START
+                ? 0
+                : (bottomProgress - FADE_START) / (1 - FADE_START);
+            document.body.style.setProperty('--bg-opacity', String(0.2));
+
+            for (var b = 0; b < blockList.length; b++) {
+                var blk = blockList[b];
+                if (progress >= blk.threshold && !blk.scrambled) {
+                    blk.scrambled = true;
+                    for (var s = 0; s < blk.spans.length; s++) {
+                        blk.spans[s].textContent = randChar();
+                    }
+                } else if (progress < blk.threshold && blk.scrambled) {
+                    blk.scrambled = false;
+                    for (var r = 0; r < blk.spans.length; r++) {
+                        blk.spans[r].textContent = blk.spans[r]._orig;
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('scroll', function () {
+            window.requestAnimationFrame(onScroll);
+        }, { passive: true });
+        onScroll();
     })();
 </script>
 
