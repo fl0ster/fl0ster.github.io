@@ -56,9 +56,12 @@
 
         /* HEADINGS: Bold and All-Caps */
         h1 {
-            font-size: 2.5rem;
+            /* Fluid: big and bold, but scales with the viewport and never exceeds 11rem */
+            font-size: clamp(2rem, 10vw, 11rem);
+            line-height: 1.0;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
+            overflow-wrap: break-word;
         }
 
         h2 {
@@ -83,9 +86,9 @@
 
         /* HEADER & PROFILE SECTION */
         .header {
-            border-left: var(--border-width) solid var(--color-header-border);
-            border-right: var(--border-width) solid var(--color-header-border);
-            border-bottom: var(--border-width) solid var(--color-header-border);
+            border-left: 10px solid var(--color-header-border);
+            border-right: 10px solid var(--color-header-border);
+            border-bottom: 20px solid var(--color-header-border);
             padding: var(--header-pad-y) var(--header-pad-x);
             margin-bottom: 2rem;
             background-color: var(--color-header);
@@ -96,6 +99,7 @@
         }
 
         .header-text {
+            flex: 1;
             min-width: 0;
         }
 
@@ -109,6 +113,15 @@
             margin: calc(-1 * var(--header-pad-y)) 0 calc(-1 * var(--header-pad-y)) calc(-1 * var(--header-pad-x));
             align-self: stretch;
             flex-shrink: 0;
+        }
+
+        /* ASCII glyphs start hidden and pop in instantly (no transition) per 5x5 block */
+        .ascii-face span {
+            visibility: hidden;
+        }
+
+        .ascii-face span.visible {
+            visibility: visible;
         }
 
         .header p {
@@ -126,6 +139,20 @@
         .skills, .contact-links, .about-info {
             padding: var(--spacing-unit);
             border: var(--border-width) solid var(--color-primary);
+            position: relative;
+            background-color: var(--color-secondary);
+        }
+
+        /* Offset black block sitting behind the Technologies and Connect boxes */
+        .skills::before, .contact-links::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: -5px;
+            bottom: -5px;
+            background-color: var(--color-primary);
+            z-index: -1;
         }
 
         .skills-list, .contact-list, .info-list {
@@ -160,12 +187,36 @@
             color: rgba(255, 255, 255, 1.0);
         }
 
+        /* RESPONSIVENESS (Mobile: stack the header vertically — face on top, name below) */
+        @media (max-width: 767px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .ascii-face {
+                /* Span the full container width: cancel the header's horizontal padding so the
+                   art is flush to the left/right inner edges, and scale the font so the 53-column
+                   art exactly fills that width (Menlo advance ≈ 0.6em → 53 * 0.6 = 31.8em). */
+                display: block;
+                align-self: stretch;
+                width: calc(100vw - 3rem - 20px); /* viewport − container padding (2×1.5rem) − header borders (2×10px) */
+                font-size: calc((100vw - 3rem - 20px) / 31.5); /* slight overshoot fills flush with no right-edge gap */
+                margin: calc(-1 * var(--header-pad-y)) calc(-1 * var(--header-pad-x)) var(--spacing-unit);
+                /* Tall art fills the width; crop the lower body from the bottom */
+                max-height: 60vh;
+                overflow: hidden;
+            }
+
+            .header-text {
+                flex: none;
+                width: 100%;
+            }
+        }
+
         /* RESPONSIVENESS (PC: Tablet and above) */
         @media (min-width: 768px) {
-            h1 {
-                font-size: 3.5rem;
-            }
-            
             .profile-grid {
                 grid-template-columns: 2fr 1fr; /* Skills take more width than Contact */
             }
@@ -338,6 +389,57 @@
     </section>
 
 </div>
+
+<script>
+    // Entry animation: split the ASCII art into 5x5 character blocks. Each block
+    // pops in instantly (no lerp) at a random moment within the first second.
+    (function () {
+        var face = document.querySelector('.ascii-face');
+        if (!face) return;
+
+        var BLOCK = 5;          // 5x5 glyphs per block
+        var DURATION = 500;    // whole reveal finishes within 1s
+        var text = face.textContent;
+        var frag = document.createDocumentFragment();
+        var blocks = {};        // block key -> array of spans
+        var row = 0, col = 0;
+
+        for (var i = 0; i < text.length; i++) {
+            var ch = text[i];
+            if (ch === '\n') {
+                frag.appendChild(document.createTextNode(ch));
+                row++;
+                col = 0;
+                continue;
+            }
+            if (ch === ' ') {
+                // Whitespace is invisible — keep it as plain text but still advance the column.
+                frag.appendChild(document.createTextNode(ch));
+                col++;
+                continue;
+            }
+            var span = document.createElement('span');
+            span.textContent = ch;
+            var key = Math.floor(row / BLOCK) + ',' + Math.floor(col / BLOCK);
+            (blocks[key] || (blocks[key] = [])).push(span);
+            frag.appendChild(span);
+            col++;
+        }
+
+        face.textContent = '';
+        face.appendChild(frag);
+
+        // Reveal each block at its own random time — all glyphs in a block pop together.
+        Object.keys(blocks).forEach(function (key) {
+            var spans = blocks[key];
+            setTimeout(function () {
+                for (var j = 0; j < spans.length; j++) {
+                    spans[j].classList.add('visible');
+                }
+            }, Math.random() * DURATION);
+        });
+    })();
+</script>
 
 </body>
 </html>
