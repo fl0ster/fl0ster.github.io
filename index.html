@@ -15,7 +15,9 @@
             --color-highlight: rgba(255, 236, 61, 1);
             --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
             --border-width: 2px;
-            --spacing-unit: 1rem;            
+            --spacing-unit: 1rem;
+            --header-pad-y: 2rem;
+            --header-pad-x: var(--spacing-unit);
         }
 
         * {
@@ -62,11 +64,13 @@
         h2 {
             font-size: 1.5rem;
             margin: 2rem 0 1rem 0;
-            padding: 0.5rem 0;
-            border-top: var(--border-width) solid var(--color-primary);
-            border-bottom: var(--border-width) solid var(--color-primary);
+            margin-right: calc(50% - 50vw); /* Bleed bar to the right viewport edge */
+            padding: 0.6rem 1rem;
+            background-color: var(--color-primary);
+            color: var(--color-header-text);
             text-transform: uppercase;
             letter-spacing: 2px;
+            border-bottom-left-radius: 16px;
         }
 
         h3 {
@@ -82,10 +86,29 @@
             border-left: var(--border-width) solid var(--color-header-border);
             border-right: var(--border-width) solid var(--color-header-border);
             border-bottom: var(--border-width) solid var(--color-header-border);
-            padding: 2rem var(--spacing-unit);            
+            padding: var(--header-pad-y) var(--header-pad-x);
             margin-bottom: 2rem;
             background-color: var(--color-header);
             color: var(--color-header-text);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-text {
+            min-width: 0;
+        }
+
+        .ascii-face {
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 12.5px;
+            line-height: 1;
+            white-space: pre;
+            /* Pull flush to the header's top, bottom and left edges (cancels header padding) */
+            margin: calc(-1 * var(--header-pad-y)) 0 calc(-1 * var(--header-pad-y)) calc(-1 * var(--header-pad-x));
+            align-self: stretch;
+            flex-shrink: 0;
         }
 
         .header p {
@@ -162,8 +185,57 @@
 <div class="container">
     
     <header class="header">
-        <h1>Filip Loster</h1>
-        <p>A developer from Krakow Poland.<br/>Loves to create, enjoys travel and sports.</p>
+        <!-- ASCII FACE: replace the contents between the <pre> tags below with new art -->
+        <pre class="ascii-face" aria-hidden="true">                                            ░        
+░                   ░░▒████████▓░                 ░  
+░     ░   ░░    ░▓████████████████████░            ░ 
+             ░███████████████████████████▒           
+      ░    ▓▓███████████████████████████████      ░  
+    ░   ░▒▓█▓▓████████████████████████████████░      
+ ░      ░██████████████████████████████████████▓░    
+░    ░  ▒▓███████████████████████████████████████▒ ░ 
+░   ░  ░▓██████▓██████████████████████████████████░  
+   ░   ▒▒▓██████▓▓▓▓▓▓█████████▓█▓█████████████████░ 
+       ▓█▓████▓▓▒▒░░░░▒██▒▒▓▒▒░░▒▒▒▒▓█▓████████████▓ 
+░     ░▓▓░▒▓▓▒▒░░░░░░░░░▒▒░░   ░░░░░▒▓▓▓███████████▓░
+      ░▒▒▒▓▓▓▒▒▒▒▒░░░░░░░░░░░   ░  ░░░░▒███████████▓ 
+      ░▒▒▒▓▓▓▒▒▒▒░░░░░░░░░░░░░        ░▒███████████▒ 
+ ░    ▒▒▒▒▓▓▒░░░░░░░░░░░░░░░      ░   ░░▒▓█████████  
+░     ░▒░▒▒▒▒░                   ░░░░░░▒▒▒▓███████   
+      ░ ░▓▓▒▓▓█▒     ░   ░  ░░   ░ ░░░▒▒▒▒▓▓████▓    
+░     ▒░▒▒     ▓░░      ▒░▒░░░ ░░   ░░░░▒▓▓▓▓▓▓█▒    
+░  ░▒█▒▒░░▓██░░░░██░░ ░ ▓░░▒▓░   ▓░░░░░░░▒▓▓▒▓▓█░░░  
+ ░   █░▒▓▒▒  ░░░▒▓█▒░░▓▒░ ▓▒█░░░░▒░▒░  ░░▒▒▓▒▓█░     
+░    ▒▒▒▓▓▒░░░▒▒▓█▓▒░░░░▒▒▒░░    ░░░░░▒▒▒▓█▓██▓░░░   
+    ░░▓▒▒▒▒▒▒▒▒▓▓██▒░░▒░░░░░   ░  ░▓   ░░▒▓      ░   
+     ░▒▓▒░░▒▒▒░████▒░▒▒░░▒░░  ░   ░     ░░▓    ░     
+ ░░  ▒▒░░░░░░  ▓░░   ░░▒ ░             ░░▒▒    ░░    
+░   ░▒░░░  ░░ ▓█░  ░   ░   ░░░    ░░  ░░░▒░░ ░░░  ░  
+░  ░▒▒░░   ░▓███▓▒░ ░▒▒▒░    ░░  ░░  ░░░▒▒▒░ ░░  ░   
+░   ░▒░   ▓▓▓▓█▓▓▒▒▓▓██▓▓▒░           ░░▒▒  ░░       
+    ▒▒░  ░▓▓ ░ ░░    ░░▒▒▓▓▓░        ░░░▓░           
+░░  ▓▒▒▒▒▓▓▓░░▒▒▒░▒░░░░▒░ ▒▓▓ ░░ ░   ░░▒▓            
+    ▓▓▓▓███▓▒░  ░         ▒▓▒░     ░░▒▒▓             
+    ▓▓███████▒▒░▒▓▒░░    ░▓█▒░ ░░░▒▒▒▒▓█   ░         
+░    ██████████████▓▒▒░░░▓████▓▒▓▓▓█▓██  ░   ░   ░░  
+░    ░███████████▓▓▓▓▓▓███████████████░     ░        
+      ▒██████████▓▓██████████████████░░              
+    ░▓█▓███████████████████████████░░░░░  ░  ░       
+░  ▓▒██▒▒██████████████████████▓▒░   ░█░      ░      
+█▒▓█▓██▓░░▒███████████████▓█▒░░░     ▒█▓█            
+█▓██▓███▓░░░░ █████▓░ ░  ░ ░       ░ ▒██▒▓░      ░   
+█████████▓        ░                  ▓███▓██         
+███████████░         ░              ▒████████        
+████████████░           ░   ░     ░▓███████████░     
+█████████████▓░ ░     ░   ░  ░░░▒▓███████████▓████▓  
+██████████▓▓██▓▓▓▒░      ░  ░▒▓▓█████████████████████
+██████████▒▒▓██▓▓█▓▓▒    ░▒▒▓████████████████████████
+██████████▒▒▒███▓▓██▓▓▒▓▓▓▓▓█████████████████████████
+█████████▓▒▒▓█▓░█▓▓█▓▓▓▓▓▓▓███████▒▒▓▓███████████████</pre>
+        <div class="header-text">
+            <h1>Filip Loster</h1>
+            <p>A developer from Krakow Poland.<br/>Loves to create, enjoys travel and sports.</p>
+        </div>
     </header>
 
     <div class="profile-grid">
