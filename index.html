@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Filip Loster - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <style>
         /* BASE & TYPOGRAPHY: Brutalist/Minimalist Core */
         :root {            
@@ -14,6 +17,7 @@
             --color-header-text: rgba(255, 255, 255,1);
             --color-highlight: rgba(255, 236, 61, 1);
             --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
+            --font-sarif: 'Playfair Display SC', serif;
             --border-width: 2px;
             --spacing-unit: 1rem;
             --header-pad-y: 2rem;
@@ -126,6 +130,10 @@
         .header-text {
             flex: 1;
             min-width: 0;
+        }
+
+        .header-text h1 {
+            font-family: var(--font-sarif);
         }
 
         .ascii-face {
@@ -389,7 +397,7 @@
 ██████████▒▒▒███▓▓██▓▓▒▓▓▓▓▓█████████████████████████
 █████████▓▒▒▓█▓░█▓▓█▓▓▓▓▓▓▓███████▒▒▓▓███████████████</pre>
         <div class="header-text">
-            <h1>Filip Loster</h1>
+            <h1 class="name">Filip Loster</h1>
             <p>A developer from Krakow Poland.<br/>Loves to create, enjoys travel and sports.</p>
         </div>
     </header>
