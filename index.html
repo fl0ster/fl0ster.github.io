@@ -179,6 +179,13 @@
             display: block;
         }
 
+        /* On hover the link slides 5px up and left (instant, no transition),
+           revealing a black block behind it via an offset hard shadow. */
+        a.project-item:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 5px 5px 0 0 var(--color-primary);
+        }
+
         .project-meta {
             font-weight: bold;
             display: block;
