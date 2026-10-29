@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "rom": "rom/foul_deamon_i_command_thee.gb",
+  "project": {
+    "name": "GigDeamon",
+    "author": "filiploster"
+  },
+  "colorCorrection": "default",
+  "customControls": {
+    "up": [
+      "ArrowUp",
+      "w"
+    ],
+    "down": [
+      "ArrowDown",
+      "s"
+    ],
+    "left": [
+      "ArrowLeft",
+      "a"
+    ],
+    "right": [
+      "ArrowRight",
+      "d"
+    ],
+    "a": [
+      "Alt",
+      "z",
+      "j"
+    ],
+    "b": [
+      "Control",
+      "k",
+      "x"
+    ],
+    "start": [
+      "Enter"
+    ],
+    "select": [
+      "Shift"
+    ]
+  }
+}
